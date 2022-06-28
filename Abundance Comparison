@@ -1,0 +1,54 @@
+import numpy as np
+import pandas as pd
+import path
+
+df = pd.read_csv (r'C:\Users\v3476\Padhu Lab Code\Proteins\Protein Raw Data.csv')
+dfEdit = df
+
+for r in range(len(dfEdit.index)):
+    try:
+        PVal1 = dfEdit.at[r, 'Abundance Ratio (log2): (CLU) / (control)']
+        PVal2 = dfEdit.at[r, 'Abundance Ratio (log2): (CTSK) / (control)']
+        if ((abs(PVal1) < 0.10) | (abs(PVal2) < 0.10)):
+            dfEdit = dfEdit.drop([r])
+        CLUscore = 0
+        CTSKscore = 0
+        S1Con = dfEdit.at[r, 'Abundances (Normalized): F1: 126, Sample, 1, control']
+        S2Con = dfEdit.at[r, 'Abundances (Normalized): F1: 127N, Sample, 2, control']
+        S3Con = dfEdit.at[r, 'Abundances (Normalized): F1: 127C, Sample, 3, control']
+        S4Con = dfEdit.at[r, 'Abundances (Normalized): F1: 128N, Sample, 4, control']
+
+        if (dfEdit.at[r, 'Abundances (Normalized): F1: 128C, Sample, 1, CLU'] > S1Con):
+            CLUscore += 1
+        if (dfEdit.at[r, 'Abundances (Normalized): F1: 129N, Sample, 2, CLU'] > S2Con):
+            CLUscore += 1
+        if (dfEdit.at[r, 'Abundances (Normalized): F1: 129C, Sample, 3, CLU'] > S3Con):
+            CLUscore += 1
+        if (dfEdit.at[r, 'Abundances (Normalized): F1: 130N, Sample, 4, CLU'] > S4Con):
+            CLUscore += 1
+
+        if (dfEdit.at[r, 'Abundances (Normalized): F1: 132C, Sample, 1, CTSK'] > S1Con):
+            CTSKscore += 1
+        if (dfEdit.at[r, 'Abundances (Normalized): F1: 133N, Sample, 2, CTSK'] > S2Con):
+            CTSKscore += 1
+        if (dfEdit.at[r, 'Abundances (Normalized): F1: 133C, Sample, 3, CTSK'] > S3Con):
+            CTSKscore += 1
+        if (dfEdit.at[r, 'Abundances (Normalized): F1: 134N, Sample, 4, CTSK'] > S4Con):
+            CTSKscore += 1
+
+        if (not(CLUscore >= 3 | CTSKscore >= 3)):
+            dfEdit = dfEdit.drop([r])
+        # print('worked')
+
+    except KeyError:
+        # print(r, KeyError)
+        None
+
+print(dfEdit)
+
+try:
+    dfEdit.to_csv(r'C:\Users\v3476\Padhu Lab Code\Proteins\Protein match3.CSV', index=False)
+except PermissionError:
+    print('To save a new csv, delete the old file')
+
+
