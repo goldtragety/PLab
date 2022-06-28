@@ -1,0 +1,39 @@
+import numpy as np
+import pandas as pd
+import path
+
+dfS1 = pd.read_csv (r'C:\Users\v3476\Padhu Lab Code\Proteins\Protein Raw Data.csv')
+dfS2 = dfS1
+# dfS1 is when |log2| is > 0.3
+# dfS2 is when 0.1 < |log2| < 0.3
+
+for r in range(len(dfS1.index)):
+    try:
+        pvCLU = dfS1.at[r, 'Abundance Ratio (log2): (CLU) / (control)']
+        pvCTSK = dfS1.at[r, 'Abundance Ratio (log2): (CTSK) / (control)']
+        pvCLU = abs(pvCLU)
+        pvCTSK = abs(pvCTSK)
+        if (not((pvCLU >= 0.3) & (pvCTSK >= 0.3))):
+            dfS1 = dfS1.drop([r])
+            r -= 1
+    except KeyError:
+        None
+
+
+for r in range(len(dfS2.index)):
+    try:
+        pvCLU = dfS2.at[r, 'Abundance Ratio (log2): (CLU) / (control)']
+        pvCTSK = dfS2.at[r, 'Abundance Ratio (log2): (CTSK) / (control)']
+        pvCLU = abs(pvCLU)
+        pvCTSK = abs(pvCTSK)
+        if (not((0.1 <= pvCLU <= 0.3) & (0.1 <= pvCTSK <= 0.3))):
+            dfS2 = dfS2.drop([r])
+            r -= 1
+    except KeyError:
+        None
+
+
+
+
+print(dfS1, dfS2)
+
