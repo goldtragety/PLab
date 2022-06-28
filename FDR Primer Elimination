@@ -1,0 +1,49 @@
+import pandas as pd
+import numpy as np
+
+posFC_DF = pd.DataFrame()
+negFC_DF = pd.DataFrame()
+
+geneSymList = []
+logFCList = []
+FDRlist = []
+newListP = []
+
+pos_geneSymList = []
+pos_logFCList = []
+pos_FDRlist = []
+pos_newListP = []
+
+neg_geneSymList = []
+neg_logFCList = []
+neg_FDRlist = []
+neg_newListP = []
+
+df = pd.read_csv (r'C:\Users\v3476\Padhu Lab Code\High Glucose\HG RNAseq\High Glucose Data.csv')
+
+for r in range(len(df.index)):
+    if (df.at[r, 'FDR'] <= 0.0526):
+        geneSymList.append(df.at[r, 'GeneSymbol'])
+        logFCList.append(df.at[r, 'log2FC'])
+        FDRlist.append(df.at[r, 'FDR'])
+
+for r in range (len(logFCList)):
+    if (logFCList[r] > 0):
+        pos_geneSymList.append(geneSymList[r])
+        pos_logFCList.append(logFCList[r])
+        pos_FDRlist.append(FDRlist[r])
+    else:
+        neg_geneSymList.append(geneSymList[r])
+        neg_logFCList.append(logFCList[r])
+        neg_FDRlist.append(FDRlist[r])
+
+
+posFC_DF['Gene Symbol'] = pos_geneSymList
+posFC_DF['log2FC'] = pos_logFCList
+posFC_DF['FDR'] = pos_FDRlist
+
+negFC_DF['Gene Symbol'] = neg_geneSymList
+negFC_DF['log2FC'] = neg_logFCList
+negFC_DF['FDR'] = neg_FDRlist
+
+print(posFC_DF, '\n \n', negFC_DF)
